@@ -6,6 +6,9 @@ const UserSchema = new mongoose.Schema(
   {
     username: {
       type: String,
+      required: true,
+      unique: false,
+
     },
     email: {
       type: String,
@@ -52,23 +55,23 @@ UserSchema.pre("save", async function (next) {
   next();
 });
 
-UserSchema.methods.comparePassword = function (candidatePassword) {
-  return bcrypt.compare(candidatePassword, this.password);
-};
+// UserSchema.methods.comparePassword = function (candidatePassword) {
+//   return bcrypt.compare(candidatePassword, this.password);
+// };
 
-// Méthode pour générer et hacher le token de réinitialisation de mot de passe
-UserSchema.methods.createPasswordResetToken = function () {
-  const resetToken = crypto.randomBytes(32).toString("hex"); // Génère un token simple
+// // Méthode pour générer et hacher le token de réinitialisation de mot de passe
+// UserSchema.methods.createPasswordResetToken = function () {
+//   const resetToken = crypto.randomBytes(32).toString("hex"); // Génère un token simple
 
-  this.passwordResetToken = crypto
-    .createHash("sha256")
-    .update(resetToken)
-    .digest("hex"); // Hache le token avant de le stocker
+//   this.passwordResetToken = crypto
+//     .createHash("sha256")
+//     .update(resetToken)
+//     .digest("hex"); // Hache le token avant de le stocker
 
-  this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // Token expire dans 10 minutes
+//   this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // Token expire dans 10 minutes
 
-  return resetToken; // Retourne le token non haché (à envoyer par email)
-};
+//   return resetToken; // Retourne le token non haché (à envoyer par email)
+// };
 
 const User = mongoose.model("User", UserSchema);
 module.exports = User;
