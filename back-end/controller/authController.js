@@ -8,7 +8,7 @@ const register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, email, password: hashedPassword });
+    const newUser = new User({ username, email, password: hashedPassword.trim() });
     await newUser.save();
     res.status(201).json({ message: "User registered successfully", newUser });
   } catch (error) {
@@ -22,8 +22,11 @@ const login = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     // const nowUser = await User.find({ email })
+    console.log(user);
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    const comparePassword = await bcrypt.compare(password, user.password);
+    console.log(comparePassword);
+    if (!user || !comparePassword) {
       return res.status(401).json({ error: "Email ou mot de pass incorrect" });
     }
 
