@@ -1,6 +1,6 @@
 require("dotenv").config();
 const User = require("../model/User");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 // controller pour l'inscription
